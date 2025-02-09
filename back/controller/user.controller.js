@@ -14,7 +14,7 @@ const register = asyncWrapper(async (req, res, next) => {
       appError.create("User already exists", 400, httpStatusText.FAIL)
     );
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, +process.env.SALT );
   const newUser = new User({
     firstName,
     lastName,
