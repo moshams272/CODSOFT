@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, "First name is required"],
-    minlength: [3, "First name must be at least 3 characters long"],
-    maxlength: [50, "First name must be at most 50 characters long"],
+    required: [true, "is required"],
+    minlength: [3, "must be at least 3 characters long"],
+    maxlength: [50, "must be at most 50 characters long"],
     validate: {
       validator: function (v) {
         return /^[a-zA-Z]+$/.test(v);
@@ -16,9 +16,9 @@ const userSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    required: [true, "Last name is required"],
-    minlength: [3, "Last name must be at least 3 characters long"],
-    maxlength: [50, "Last name must be at most 50 characters long"],
+    required: [true, "is required"],
+    minlength: [3, "must be at least 3 characters long"],
+    maxlength: [50, "must be at most 50 characters long"],
     validate: {
       validator: function (v) {
         return /^[a-zA-Z]+$/.test(v); // Only letters allowed
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
 
   email: {
     type: String,
-    required: [true, "Email is required"],
+    required: [true, "is required"],
     unique: true,
     validate: {
       validator: function (v) {
@@ -41,8 +41,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
-    minlength: [8, "Password length should be 8 character or more"],
+    required: [true, "is required"],
+    minlength: [8, "length should be 8 character or more"],
   },
   tasks: [
     {

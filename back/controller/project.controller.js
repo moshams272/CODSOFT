@@ -3,6 +3,7 @@ import User from "../models/user.model.js"
 import { httpStatusText } from "../utils/httpStatusText.js";
 import { asyncWrapper } from "../middleware/asyncWrapper.js";
 import { appError } from "../utils/AppError.js";
+import cron from "node-cron"
 
 const getProject = asyncWrapper(async (req, res, next) => {
   const project = await Project.findById(req.params._id);
@@ -62,3 +63,12 @@ const getAllProject = asyncWrapper(async(req,res,next)=>{
 })
 
 export {getProject,getAllProject,createProject,updateProject,deleteProject};
+
+async function updateEveryMidNightProjects() {
+  await Project.updateMany(
+    { deadline: { $lt: new Date() } },
+    { $set: { status: "Deadline is over" } }
+  );
+}
+
+cron.schedule("0 0 * * *",updateEveryMidNightProjects);

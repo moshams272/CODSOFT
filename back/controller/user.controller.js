@@ -48,11 +48,11 @@ const login = asyncWrapper(async (req, res, next) => {
   }
   const user = await User.findOne({ email: email });
   if (!user) {
-    return next(appError.create("User not found", 400, httpStatusText.FAIL));
+    return next(appError.create("User not found, Try again", 400, httpStatusText.FAIL));
   }
   const matchedPassword = await bcrypt.compare(password, user.password);
   if (!matchedPassword) {
-    return next(appError.create("Something wrong", 500, httpStatusText.ERROR));
+    return next(appError.create("Please check for email or password", 500, httpStatusText.ERROR));
   }
   const token = await generateJWT({ email: user.email, _id: user._id });
   return res.json({ status: httpStatusText.SUCCESS, data: { token: token } });
@@ -62,7 +62,7 @@ const getCurrentUser = asyncWrapper(async (req, res, next) => {
   const user = await User.findById(req.currentUser._id);
   
   if (!user) {
-    return next(appError.create("User not found", 400, httpStatusText.FAIL));
+    return next(appError.create("User not found, Try again", 400, httpStatusText.FAIL));
   }
   return res.json({ status: httpStatusText.SUCCESS, data: { user: {_id:user._id, firstName:user.firstName, lastName:user.lastName, email:user.email} } });
 });
@@ -70,13 +70,13 @@ const getCurrentUser = asyncWrapper(async (req, res, next) => {
 const updateUser = asyncWrapper(async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    return next(appError.create(error.array(), 400, httpStatusText.FAIL));
+    return next(appError.create(error.array()[0].msg, 400, httpStatusText.FAIL));
   }
   const user = await User.findByIdAndUpdate(req.currentUser._id, {
     $set: { ...req.body },
   });
   if (!user) {
-    return next(appError.create("User not found", 400, httpStatusText.FAIL));
+    return next(appError.create("User not found, Try again", 400, httpStatusText.FAIL));
   }
   return res.json({ status: httpStatusText.SUCCESS, data: null });
 });

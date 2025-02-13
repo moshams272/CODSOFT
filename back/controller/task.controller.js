@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import { httpStatusText } from "../utils/httpStatusText.js";
 import { asyncWrapper } from "../middleware/asyncWrapper.js";
 import { appError } from "../utils/AppError.js";
+import cron from "node-cron"
 
 const getTask = asyncWrapper(async (req, res, next) => {
   const task = await Task.findById(req.params._id).populate("project");
@@ -13,8 +14,12 @@ const getTask = asyncWrapper(async (req, res, next) => {
 });
 
 const updateTaskStatusForUser = asyncWrapper(async (req, res, next) => {
-  if (!["Unassigned", "In Progress", "Completed"].includes(req.body.status)) {
+  if (!["Not started", "In Progress", "Completed"].includes(req.body.status)) {
     return next(appError.create("Try again", 400, httpStatusText.FAIL));
+  }
+  const taskTest = await Task.findById(req.params._id);
+  if(taskTest.status==="Deadline is over"){
+    return next(appError.create("Sorry Deadline is over", 400, httpStatusText.FAIL));
   }
   const task = await Task.findByIdAndUpdate(req.params._id, {
     $set: { status: req.body.status },
@@ -107,7 +112,7 @@ const createTask = asyncWrapper(async (req, res, next) => {
     project,
     deadline,
     assignedTo: [],
-    status: "Unassigned",
+    status: "Not started",
   });
   await newTask.save();
   await User.findByIdAndUpdate(req.currentUser._id,{$push:{tasks:req.params._id}});
@@ -132,3 +137,12 @@ export {
   assignTask,
   unassignTask
 };
+
+async function updateEveryMidNightTasks() {
+  await Task.updateMany(
+    { deadline: { $lt: new Date() } },
+    { $set: { status: "Deadline is over" } }
+  );
+}
+
+cron.schedule("0 0 * * *",updateEveryMidNightTasks);
