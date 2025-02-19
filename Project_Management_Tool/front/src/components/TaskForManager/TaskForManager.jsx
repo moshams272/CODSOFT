@@ -20,8 +20,6 @@ export default function TaskForManager() {
   const deleteTask = async () => {
     swalWithBootstrapButtons
       .fire({
-        background: "rgb(1, 39, 36)",
-        color: "#dfdfdf",
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
