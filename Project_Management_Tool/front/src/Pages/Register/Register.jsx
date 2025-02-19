@@ -29,7 +29,7 @@ export default function Register() {
       localStorage.setItem("token", response.data.data.user.token);
       navigate("/dashboard");
     } catch (err) {
-      let error=err.response.data?.message||"";
+      let error=err.response?.data.message||"";
       if(error.startsWith("User validation failed: ")){
         error=error.slice("User validation failed: ".length);
       }
