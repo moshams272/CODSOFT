@@ -4,6 +4,7 @@ import { useLoaderData, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Swal from "sweetalert2";
 
 export default function ProjectsForManager() {
   const { _id } = useParams();
@@ -14,14 +15,49 @@ export default function ProjectsForManager() {
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [selectedTasks, setSelectedTasks] = useState([]);
 
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: false
+  });
+  
 
   const deleteProject=async(_id)=>{
-    try {
-      await axiosInstance.delete(`/api/projects/${_id}`);
-      navigate(`/dashboard`);
-    } catch (error) {
-      console.log(error);
-    }
+    swalWithBootstrapButtons.fire({
+      background:"rgb(1, 39, 36)",
+      color:"#dfdfdf",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        try {
+          await axiosInstance.delete(`/api/projects/${_id}`);
+          navigate(`/dashboard`);
+        } catch (error) {
+          console.log(error);
+        }
+        swalWithBootstrapButtons.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          icon: "error"
+        });
+      }
+    });
   }
   useEffect(() => {
     setSelectedTasks(
