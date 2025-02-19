@@ -1,6 +1,6 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { MdOutlineSettings } from "react-icons/md";
 import { FaArrowRightToBracket } from "react-icons/fa6";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
@@ -8,13 +8,14 @@ import axiosInstance from "../../AxiosConfig/AxiosConfig";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  
+    const navigate=useNavigate();
     const [user, setUser] = useState({});
       const getUser=async()=>{
         try {
             const response=await axiosInstance.get("/api/users/");
             setUser(response.data.data.user)
         } catch (error) {
+            navigate("/login");
             console.log(error.message);
         }
       }
