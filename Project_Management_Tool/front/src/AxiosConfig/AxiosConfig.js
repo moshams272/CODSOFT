@@ -3,7 +3,7 @@ import store from "../store/store";
 import { toggleLoader } from "../store/slice/loader";
 
 const axiosInstance = axios.create({
-  baseURL: "https://project-management-tool-back.vercel.app/",
+  baseURL: "https://project-management-tool-back.vercel.app",
 });
 
 axiosInstance.interceptors.request.use(
