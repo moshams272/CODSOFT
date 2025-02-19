@@ -21,7 +21,7 @@ export default function TaskForManager() {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        text: "You won't be able to return this",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
@@ -38,13 +38,13 @@ export default function TaskForManager() {
           }
           swalWithBootstrapButtons.fire({
             title: "Deleted!",
-            text: "Your file has been deleted.",
+            text: "Your task has been deleted.",
             icon: "success",
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
-            text: "Your imaginary file is safe :)",
+            text: "Be safe :)",
             icon: "error",
           });
         }
