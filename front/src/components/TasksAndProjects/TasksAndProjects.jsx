@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import axiosInstance from "../../AxiosConfig/AxiosConfig";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 export default function TasksAndProjects(){
     const {tasks,projects} = useLoaderData();
+    const navigate=useNavigate();
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [currentPageProjects, setCurrentPageProjects] = useState(1);
@@ -53,6 +54,7 @@ export default function TasksAndProjects(){
                     <Button
                       variant="secondary"
                       style={{ padding: "1vh 1.5vw", color: "#dfdfdf" }}
+                      onClick={()=>navigate(`/dashboard/task/${item._id}`)}
                     >
                       Details
                     </Button>
@@ -123,6 +125,7 @@ export default function TasksAndProjects(){
                     <Button
                       variant="secondary"
                       style={{ padding: "1vh 1.5vw", color: "#dfdfdf" }}
+                      onClick={()=>navigate(`/dashboard/project/${item._id}`)}
                     >
                       Details
                     </Button>
@@ -145,7 +148,7 @@ export default function TasksAndProjects(){
           <Button
             variant="outline-secondary"
             style={{ padding: "1vh 1.5vw", color: "#dfdfdf" ,marginRight:"0.5vw"}}
-            disabled={currentPageTasks === 1}
+            disabled={currentPageProjects === 1}
             onClick={() => setCurrentPageProjects(currentPageProjects - 1)}
           >
             Prev

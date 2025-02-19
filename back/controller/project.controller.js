@@ -1,5 +1,6 @@
 import Project from "../models/project.model.js";
-import User from "../models/user.model.js" 
+import User from "../models/user.model.js" ;
+import Task from "../models/task.model.js"
 import { httpStatusText } from "../utils/httpStatusText.js";
 import { asyncWrapper } from "../middleware/asyncWrapper.js";
 import { appError } from "../utils/AppError.js";
@@ -17,6 +18,9 @@ const getProject = asyncWrapper(async (req, res, next) => {
 });
 
 const updateProject = asyncWrapper(async (req, res, next) => {
+  if(req.body.deadline<new Date().toISOString()){
+    return next(appError.create("The Date should be in future", 400, httpStatusText.FAIL));
+  }
   const project = await Project.findByIdAndUpdate(req.params._id, {
     $set: { ...req.body },
   });
@@ -27,6 +31,12 @@ const updateProject = asyncWrapper(async (req, res, next) => {
 });
 
 const deleteProject = asyncWrapper(async (req, res, next) => {
+  const tasks= await Task.find({project:req.params._id},"_id");
+  await User.updateMany(
+    { tasks: { $in: tasks } },
+    { $pull: { tasks: { $in: tasks } } }
+  );
+  await Task.deleteMany({project:req.params._id});
   const project = await Project.findByIdAndDelete(req.params._id);
   await User.findByIdAndUpdate(req.currentUser._id,{$pull:{manage:req.params._id}});
   if (!project) {
@@ -37,6 +47,9 @@ const deleteProject = asyncWrapper(async (req, res, next) => {
 
 const createProject = asyncWrapper(async (req, res, next) => {
   const { title, description, deadline } = req.body;
+  if(deadline<new Date().toISOString()){
+    return next(appError.create("The Date should be in future", 400, httpStatusText.FAIL));
+  }
   const newProject = new Project({
     title,
     description,

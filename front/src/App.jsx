@@ -13,6 +13,15 @@ import TasksAndProjects, {
   loader as tasksAndProjectsLoader,
 } from "./components/TasksAndProjects/TasksAndProjects.jsx";
 import Settings from "./components/Settings/Settings.jsx";
+import TaskForUser from "./components/TaskForUser/TaskForUser.jsx";
+import ProjectsForManager from "./components/ProjectsForManager/ProjectsForManager.jsx";
+import ProjectUpdate, { loader as loaderProjectUpdate } from "./components/ProjectUpdate/ProjectUpdate.jsx";
+import ProjectCreate from "./components/ProjectCreate/ProjectCreate.jsx";
+import CreateTask from "./components/CreateTask/CreateTask.jsx";
+import TaskForManager from "./components/TaskForManager/TaskForManager.jsx";
+import TaskUpdate, { loader as loaderTaskUpdate } from "./components/TaskUpdate/TaskUpdate.jsx";
+import AssignTask from "./components/AssignTask/AssignTask.jsx";
+import UnassignTask from "./components/UnassignTask/UnassignTask.jsx";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +43,42 @@ const routes = createBrowserRouter([
           {
             path:"/dashboard/settings",
             element:<Settings/>
-
+          },
+          {
+            path:"/dashboard/task/:_id",
+            element:<TaskForUser/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/:_id",
+            element:<ProjectsForManager/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/update/:_id",
+            element:<ProjectUpdate/>,loader:loaderProjectUpdate,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/create",
+            element:<ProjectCreate/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/createTask/:_id",
+            element:<CreateTask/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/:_idProject/task/:_id",
+            element:<TaskForManager/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/:_idProject/updateTask/:_id",
+            element:<TaskUpdate/>,loader:loaderTaskUpdate,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/:_idProject/assignTask/:_id",
+            element:<AssignTask/>,errorElement:<NotFound/>
+          },
+          {
+            path:"/dashboard/project/:_idProject/unassignTask/:_id",
+            element:<UnassignTask/>,errorElement:<NotFound/>
           }
         ],
       },

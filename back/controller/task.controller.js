@@ -6,7 +6,7 @@ import { appError } from "../utils/AppError.js";
 import cron from "node-cron"
 
 const getTask = asyncWrapper(async (req, res, next) => {
-  const task = await Task.findById(req.params._id).populate("project");
+  const task = await Task.findById(req.params._id).populate({path:"project",populate:({path:"manager",select:"email"})}).populate("assignedTo","email");
   if (!task) {
     return next(appError.create("Task not found", 400, httpStatusText.FAIL));
   }
@@ -14,7 +14,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
 });
 
 const updateTaskStatusForUser = asyncWrapper(async (req, res, next) => {
-  if (!["Not started", "In Progress", "Completed"].includes(req.body.status)) {
+  if (!["Not Started", "In Progress", "Completed"].includes(req.body.status)) {
     return next(appError.create("Try again", 400, httpStatusText.FAIL));
   }
   const taskTest = await Task.findById(req.params._id);
@@ -42,6 +42,9 @@ const getAllTasksForUser = asyncWrapper(async (req, res, next) => {
 });
 
 const updateTaskForManager = asyncWrapper(async (req, res, next) => {
+  if(req.body.deadline<new Date().toISOString()){
+    return next(appError.create("The Date should be in future", 400, httpStatusText.FAIL));
+  }
   const task = await Task.findByIdAndUpdate(req.params._id, {
     $set: { ...req.body },
   });
@@ -78,7 +81,7 @@ const unassignTask=asyncWrapper(async(req,res,next)=>{
   if(!email){
     return next(appError.create("Email is required", 400, httpStatusText.FAIL));
   }
-  const user = await User.findOneAndUpdate({email:email});
+  const user = await User.findOne({email:email});
   if(!user){
     return next(appError.create("User not found, Check the email again", 400, httpStatusText.FAIL));
   }
@@ -96,6 +99,7 @@ const unassignTask=asyncWrapper(async(req,res,next)=>{
 });
 
 const deleteTask = asyncWrapper(async (req, res, next) => {
+  await User.updateMany({tasks:req.params._id},{$pull:{tasks:req.params._id}});
   const task = await Task.findByIdAndDelete(req.params._id);
   if (!task) {
     return next(appError.create("Task not found", 400, httpStatusText.FAIL));
@@ -106,13 +110,16 @@ const deleteTask = asyncWrapper(async (req, res, next) => {
 
 const createTask = asyncWrapper(async (req, res, next) => {
   const { title, description, project, deadline } = req.body;
+  if(deadline<new Date().toISOString()){
+    return next(appError.create("The Date should be in future", 400, httpStatusText.FAIL));
+  }
   const newTask = new Task({
     title,
     description,
     project,
     deadline,
     assignedTo: [],
-    status: "Not started",
+    status: "Not Started",
   });
   await newTask.save();
   await User.findByIdAndUpdate(req.currentUser._id,{$push:{tasks:req.params._id}});

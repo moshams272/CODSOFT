@@ -17,7 +17,6 @@ export default function Dashboard() {
         } catch (error) {
             console.log(error.message);
         }
-    
       }
 
     useEffect(()=>{
@@ -47,12 +46,13 @@ export default function Dashboard() {
             style={{ fontSize: "20px" }}
           >
             <Navbar.Text style={{ marginRight: "1vw" }}>
-              <Link to={"/createProject"}>
+              <Link to={"/dashboard/project/:_idProject/create"}>
                 <MdOutlineCreateNewFolder
                   style={{ color: "rgb(226 223 223 / 80%)" }}
                 />
               </Link>
             </Navbar.Text>
+
             <Navbar.Text style={{ marginRight: "1vw" }}>
               <Link to={"/dashboard/settings"}>
                 <MdOutlineSettings
