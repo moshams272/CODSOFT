@@ -1,46 +1,28 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../AxiosConfig/AxiosConfig";
-import { useParams } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 export default function ProjectsForManager() {
-  const { _idProject,_id } = useParams();
-  const [project, setProject] = useState();
-  const [tasks, setTasks] = useState([]);
+  const { _id } = useParams();
+  const getProjectAndItsTasks=useLoaderData();
+  const [project, setProject] = useState(getProjectAndItsTasks.project);
+  const [tasks, setTasks] = useState(getProjectAndItsTasks.tasks);
   const navigate = useNavigate();
   const [currentPageTasks, setCurrentPageTasks] = useState(1);
   const [selectedTasks, setSelectedTasks] = useState([]);
-  const getProject = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/projects/${_id}`).then();
-      setProject(response.data.data.project);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const getAllTasksForProject = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/tasks/manager/all/${_id}`);
-      setTasks(response.data.data.tasks);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const deleteProject=async(_id)=>{
     try {
       await axiosInstance.delete(`/api/projects/${_id}`);
+      navigate(`/dashboard`);
     } catch (error) {
       console.log(error);
     }
   }
-  useEffect(() => {
-    getProject();
-    getAllTasksForProject();
-  }, []);
   useEffect(() => {
     setSelectedTasks(
       tasks.slice((currentPageTasks - 1) * 3, (currentPageTasks - 1) * 3 + 3)
@@ -105,7 +87,7 @@ export default function ProjectsForManager() {
                     <Button
                       variant="secondary"
                       style={{ padding: "1vh 1.5vw", color: "#dfdfdf" }}
-                      onClick={() => navigate(`/dashboard/project/${_idProject}/task/${item._id}`)}
+                      onClick={() => navigate(`/dashboard/project/${_id}/task/${item._id}`)}
                     >
                       Details
                     </Button>
@@ -166,7 +148,7 @@ export default function ProjectsForManager() {
       }}>
         <div style={{marginBottom:"1vh"}}>
         <Button
-            variant="secondary"
+            variant="outline-secondary"
             style={{
               padding: "1vh 1.5vw",
               color: "#dfdfdf",
@@ -183,20 +165,20 @@ export default function ProjectsForManager() {
               color: "#dfdfdf",
               marginLeft: "0.5vw",
             }}
-            onClick={()=>{deleteProject(project._id)}}
+            onClick={()=>{deleteProject(_id)}}
           >
             Delete
           </Button>
         </div>
         <div>
         <Button
-            variant="secondary"
+            variant="outline-secondary"
             style={{
               padding: "1vh 3.7vw",
               color: "#dfdfdf",
               marginLeft: "0.5vw",
             }}
-            onClick={()=>{navigate(`/dashboard/project/${_idProject}/createTask/${_id}`)}}
+            onClick={()=>{navigate(`/dashboard/project/createTask/${_id}`)}}
           >
             Create Task
           </Button>
@@ -205,3 +187,9 @@ export default function ProjectsForManager() {
     </main>
   );
 }
+
+export const loader = async (arg) => {
+  const tasks = await axiosInstance.get(`/api/tasks/manager/all/${arg.params._id}`);
+  const project = await axiosInstance.get(`/api/projects/${arg.params._id}`)
+  return {tasks:tasks.data.data.tasks,project:project.data.data.project};
+};

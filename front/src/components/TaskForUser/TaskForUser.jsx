@@ -1,11 +1,12 @@
 import axiosInstance from "../../AxiosConfig/AxiosConfig";
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useLoaderData, useParams } from "react-router-dom";
 
 export default function TaskForUser() {
   const { _id } = useParams();
-  const [task,setTask]=useState()
+  const getTask=useLoaderData();
+  const [task,setTask]=useState(getTask)
   const handleStatus=async(status)=>{
     try {
         await axiosInstance.patch(`/api/tasks/user/${_id}`,{status:status});
@@ -14,18 +15,6 @@ export default function TaskForUser() {
         console.log(error);
     }
   }
-  const getTask=async()=>{
-    try {
-        const response=await axiosInstance.get(`/api/tasks/${_id}`);
-        setTask(response.data.data.task);
-    } catch (error) {
-        console.log(error);
-        
-    }
-  }
-  useEffect(()=>{
-    getTask();
-  },[]);
   return (
     <main
       style={{ fontSize: "18px",display:"flex" }}
@@ -54,9 +43,9 @@ export default function TaskForUser() {
             <Button
               variant="outline-secondary"
               style={{ padding: "1vh 1.5vw" ,color:"#dfdfdf",marginRight:"2vw"}}
-              onClick={()=>handleStatus("Not Started")}
+              onClick={()=>handleStatus("Pending")}
             >
-              Not Started
+              Pending
             </Button>
 
             <Button
@@ -110,3 +99,7 @@ export default function TaskForUser() {
   );
 }
 
+export const loader = async (arg) => {
+  const response=await axiosInstance.get(`/api/tasks/${arg.params._id}`);
+  return response.data.data.task;
+};

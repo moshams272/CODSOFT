@@ -10,15 +10,15 @@ import store from "./store/store.js";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TasksAndProjects, {
-  loader as tasksAndProjectsLoader,
+  loader as loaderTasksAndProjects,
 } from "./components/TasksAndProjects/TasksAndProjects.jsx";
 import Settings from "./components/Settings/Settings.jsx";
-import TaskForUser from "./components/TaskForUser/TaskForUser.jsx";
-import ProjectsForManager from "./components/ProjectsForManager/ProjectsForManager.jsx";
+import TaskForUser, { loader as loaderTaskForUser} from "./components/TaskForUser/TaskForUser.jsx";
+import ProjectForManager, { loader as  loaderProjectForManager} from "./components/ProjectForManager/ProjectForManager.jsx";
 import ProjectUpdate, { loader as loaderProjectUpdate } from "./components/ProjectUpdate/ProjectUpdate.jsx";
 import ProjectCreate from "./components/ProjectCreate/ProjectCreate.jsx";
 import CreateTask from "./components/CreateTask/CreateTask.jsx";
-import TaskForManager from "./components/TaskForManager/TaskForManager.jsx";
+import TaskForManager, { loader as loaderTaskForManager} from "./components/TaskForManager/TaskForManager.jsx";
 import TaskUpdate, { loader as loaderTaskUpdate } from "./components/TaskUpdate/TaskUpdate.jsx";
 import TaskAssignOrUnassign from "./components/TaskAssignOrUnassign/TaskAssignOrUnassign.jsx";
 const routes = createBrowserRouter([
@@ -36,7 +36,7 @@ const routes = createBrowserRouter([
           {
             index: true,
             element: <TasksAndProjects />,
-            loader: tasksAndProjectsLoader,
+            loader: loaderTasksAndProjects,
             errorElement: <NotFound />,
           },
           {
@@ -45,11 +45,11 @@ const routes = createBrowserRouter([
           },
           {
             path:"/dashboard/task/:_id",
-            element:<TaskForUser/>,errorElement:<NotFound/>
+            element:<TaskForUser/>,loader:loaderTaskForUser,errorElement:<NotFound/>
           },
           {
             path:"/dashboard/project/:_id",
-            element:<ProjectsForManager/>,errorElement:<NotFound/>
+            element:<ProjectForManager/>,loader:loaderProjectForManager,errorElement:<NotFound/>
           },
           {
             path:"/dashboard/project/update/:_id",
@@ -65,7 +65,7 @@ const routes = createBrowserRouter([
           },
           {
             path:"/dashboard/project/:_idProject/task/:_id",
-            element:<TaskForManager/>,errorElement:<NotFound/>
+            element:<TaskForManager/>,loader:loaderTaskForManager,errorElement:<NotFound/>
           },
           {
             path:"/dashboard/project/:_idProject/updateTask/:_id",

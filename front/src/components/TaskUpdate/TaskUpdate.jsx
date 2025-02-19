@@ -9,7 +9,6 @@ export default function TaskUpdate() {
   const task=useLoaderData();
   const [title,setTitle]=useState(task.title);
   const [description,setDescription]=useState(task.description);
-  const [status,setStatus]=useState(task.status);
   const [deadline,setDeadline]=useState(task.deadline.split("T")[0]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ export default function TaskUpdate() {
     const updateTask={
       title,
       description,
-      status,
       deadline
     };
     try {
@@ -72,39 +70,6 @@ export default function TaskUpdate() {
             }}
           />
         </Form.Group>
-        <Form.Group>
-        <p>Status:</p>
-            <span style={{
-                fontSize:"16px",
-                margin:"2vw",
-            }}>{status}</span>
-            <p style={{marginTop:"2vh",fontSize:"14px"}}>If you want to update status, just choose from one below:</p>
-            <div style={{marginBottom:"2vh"}}>
-            <Button
-              variant="outline-secondary"
-              style={{ padding: "1vh 1.5vw" ,color:"#dfdfdf",marginRight:"2vw"}}
-              onClick={()=>setStatus("Pending")}
-            >
-              Pending 
-            </Button>
-
-            <Button
-              variant="outline-secondary"
-              style={{ padding: "1vh 1.5vw" ,color:"#dfdfdf",marginRight:"2vw"}}
-              onClick={()=>setStatus("In Progress")}
-            >
-              In Progress
-            </Button>
-            
-            <Button
-              variant="outline-secondary"
-              style={{ padding: "1vh 1.5vw" ,color:"#dfdfdf",marginRight:"2vw"}}
-              onClick={()=>setStatus("Completed")}
-            >
-              Completed
-            </Button>
-                </div>
-                </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Deadline</Form.Label>
           <Form.Control

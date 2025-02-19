@@ -65,7 +65,7 @@ export default function TaskAssignOrUnassign(){
             type="submit"
             style={{ padding: "1vh 1.5vw", color: "#dfdfdf" }}
           >
-            Unassign
+            {assignOrUnassign[0].toUpperCase()+assignOrUnassign.substring(1)}
           </Button>
         </div>
       </Form>

@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../AxiosConfig/AxiosConfig";
 import Button from 'react-bootstrap/Button';
 
 export default function TaskForManager() {
     const { _idProject,_id } = useParams();
-    const [task,setTask]=useState();
+    const getTask=useLoaderData();
+    const [task,setTask]=useState(getTask);
     const navigate=useNavigate();
     
     const deleteTask=async()=>{
@@ -16,17 +17,6 @@ export default function TaskForManager() {
        console.log(error);
       }
     }
-    const getTask=async()=>{
-      try {
-          const response=await axiosInstance.get(`/api/tasks/${_id}`);
-          setTask(response.data.data.task);
-      } catch (error) {
-          console.log(error);
-      }
-    }
-    useEffect(()=>{
-      getTask();
-    },[]);
     return (
       <main
         style={{ fontSize: "18px",display:"flex" ,height:"82vh"}}
@@ -74,7 +64,7 @@ export default function TaskForManager() {
         <section style={{display:"flex",flexDirection:"column",alignItems:"flex-start",width:"50vw"}}>
 
         <Button
-            variant="secondary"
+            variant="outline-secondary"
             style={{
              width:"10vw",
              height:"5.5vh",
@@ -87,7 +77,7 @@ export default function TaskForManager() {
           </Button>
 
           <Button
-            variant="secondary"
+            variant="outline-secondary"
             style={{
               width:"10vw",
               height:"5.5vh",
@@ -100,7 +90,7 @@ export default function TaskForManager() {
           </Button>
 
           <Button
-            variant="secondary"
+            variant="outline-secondary"
             style={{
               width:"10vw",
               height:"5.5vh",
@@ -127,4 +117,9 @@ export default function TaskForManager() {
         </section>
       </main>
     )
+}
+
+export const loader=async(arg)=>{
+  const response=await axiosInstance.get(`/api/tasks/${arg.params._id}`);
+  return response.data.data.task;
 }

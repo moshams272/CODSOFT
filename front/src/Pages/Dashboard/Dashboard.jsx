@@ -46,7 +46,7 @@ export default function Dashboard() {
             style={{ fontSize: "20px" }}
           >
             <Navbar.Text style={{ marginRight: "1vw" }}>
-              <Link to={"/dashboard/project/:_idProject/create"}>
+              <Link to={"/dashboard/project/create"}>
                 <MdOutlineCreateNewFolder
                   style={{ color: "rgb(226 223 223 / 80%)" }}
                 />

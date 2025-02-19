@@ -14,7 +14,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
 });
 
 const updateTaskStatusForUser = asyncWrapper(async (req, res, next) => {
-  if (!["Not Started", "In Progress", "Completed"].includes(req.body.status)) {
+  if (!["Pending", "In Progress", "Completed"].includes(req.body.status)) {
     return next(appError.create("Try again", 400, httpStatusText.FAIL));
   }
   const taskTest = await Task.findById(req.params._id);
@@ -119,7 +119,7 @@ const createTask = asyncWrapper(async (req, res, next) => {
     project,
     deadline,
     assignedTo: [],
-    status: "Not Started",
+    status: "Pending",
   });
   await newTask.save();
   await User.findByIdAndUpdate(req.currentUser._id,{$push:{tasks:req.params._id}});
