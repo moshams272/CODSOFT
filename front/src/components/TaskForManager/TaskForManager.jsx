@@ -94,7 +94,7 @@ export default function TaskForManager() {
               color: "#dfdfdf",
               margin: "0 0 3vh 0.5vw",
             }}
-            onClick={() => {navigate(`/dashboard/project/${_idProject}/assignTask/${_id}`)}}
+            onClick={() => {navigate(`/dashboard/project/${_idProject}/TaskAssignOrUnassign/${_id}/assign`)}}
           >
             Assign
           </Button>
@@ -107,7 +107,7 @@ export default function TaskForManager() {
               color: "#dfdfdf",
               margin: "0 0 3vh 0.5vw",
             }}
-            onClick={() => {navigate(`/dashboard/project/${_idProject}/unassignTask/${_id}`)}}
+            onClick={() => {navigate(`/dashboard/project/${_idProject}/TaskAssignOrUnassign/${_id}/unassign`)}}
           >
             Unassign
           </Button>

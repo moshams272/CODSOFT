@@ -4,15 +4,15 @@ import axiosInstance from "../../AxiosConfig/AxiosConfig";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export default function UnassignTask(){
-    const { _idProject,_id } = useParams();
+export default function TaskAssignOrUnassign(){
+    const { assignOrUnassign ,_idProject,_id } = useParams();
     const [email,setEmail]=useState("");
     const [error, setError] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.patch(`/api/tasks/manager/unassign/${_id}`, {email:email});
+      await axiosInstance.patch(`/api/tasks/manager/${assignOrUnassign}/${_id}`, {email:email});
       navigate(`/dashboard/project/${_idProject}/task/${_id}`);
     } catch (err) {
       let error = err.response.data.message;

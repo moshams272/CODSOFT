@@ -20,8 +20,7 @@ import ProjectCreate from "./components/ProjectCreate/ProjectCreate.jsx";
 import CreateTask from "./components/CreateTask/CreateTask.jsx";
 import TaskForManager from "./components/TaskForManager/TaskForManager.jsx";
 import TaskUpdate, { loader as loaderTaskUpdate } from "./components/TaskUpdate/TaskUpdate.jsx";
-import AssignTask from "./components/AssignTask/AssignTask.jsx";
-import UnassignTask from "./components/UnassignTask/UnassignTask.jsx";
+import TaskAssignOrUnassign from "./components/TaskAssignOrUnassign/TaskAssignOrUnassign.jsx";
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -73,12 +72,8 @@ const routes = createBrowserRouter([
             element:<TaskUpdate/>,loader:loaderTaskUpdate,errorElement:<NotFound/>
           },
           {
-            path:"/dashboard/project/:_idProject/assignTask/:_id",
-            element:<AssignTask/>,errorElement:<NotFound/>
-          },
-          {
-            path:"/dashboard/project/:_idProject/unassignTask/:_id",
-            element:<UnassignTask/>,errorElement:<NotFound/>
+            path:"/dashboard/project/:_idProject/TaskAssignOrUnassign/:_id/:assignOrUnassign",
+            element:<TaskAssignOrUnassign/>,errorElement:<NotFound/>
           }
         ],
       },
